@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dictionary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+<form th:object="${user}" class="form-signing w-25 m-auto" method="post" action="/registration">
+    <h1 class="h3 mb-3 font-weight-normal text-center">Please fill the fields</h1>
+    <div class="input-group-lg mb-3">
+        <label for="inputUserName" class="sr-only">User Name</label>
+        <input type="text" th:field="*{username}" id="inputUserName" class="form-control"
+               th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'" placeholder="User Name">
+        <div class="invalid-feedback">
+            <th:block th:each="err : ${#fields.errors('username')}" >
+                <span th:text="${err}"></span>
+            </th:block>
+        </div>
+    </div>
+    <div class="input-group-lg mb-3">
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" th:field="*{email}" id="inputEmail" class="form-control"
+               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" placeholder="@mail">
+        <div class="invalid-feedback">
+            <th:block th:each="err : ${#fields.errors('email')}" >
+                <span th:text="${err}"></span>
+            </th:block>
+        </div>
+    </div>
+    <div class="input-group-lg mb-3">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" th:field="*{password}" id="inputPassword" class="form-control"
+               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="Password"
+        >
+        <div class="invalid-feedback">
+            <th:block th:each="err : ${#fields.errors('password')}" >
+                <span th:text="${err}"></span>
+            </th:block>
+        </div>
+    </div>
+    <div class="input-group-lg mb-3">
+        <label for="inputConfirmPassword" class="sr-only">Confirm password</label>
+        <input type="password" th:field="*{passwordConfirm}" id="inputConfirmPassword" class="form-control"
+               th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid'"
+               placeholder="Confirm password" >
+        <div class="invalid-feedback">
+            <th:block th:each="err : ${#fields.errors('passwordConfirm')}" >
+                <span th:text="${err}"></span>
+            </th:block>
+        </div>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    <p class="text-center mt-2 mb-2">You already have account? <a href="/login">Sign in</a></p>
+    <p class="mb-3 text-muted text-center">&copy; 2020</p>
+</form>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+</html>
