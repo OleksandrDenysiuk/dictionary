@@ -59,7 +59,7 @@
         <div class="col-md-4 mb-3 mt-3" th:each="category : ${user.categories}">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-center">Category title</h5>
+                    <h5 class="card-title text-center" th:text="${category.name}">Category title</h5>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Amount word: 0</li>
@@ -72,7 +72,8 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="formCreateCategoryModal" tabindex="-1" role="dialog" aria-labelledby="formCreateCategoryModalLabel"
+<div class="modal fade" id="formCreateCategoryModal" tabindex="-1" role="dialog"
+     aria-labelledby="formCreateCategoryModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -82,19 +83,21 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form>
+            <form method="post" action="/category/create">
+                <div class="modal-body">
+
                     <div class="form-group">
                         <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name"
+                        <input type="text" class="form-control" id="name" name="categoryName"
                                placeholder="Enter the name">
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Create</button>
-            </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
