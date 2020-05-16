@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -41,8 +42,7 @@ class UserServiceImplTest {
 
         when(bCryptPasswordEncoder.encode(anyString())).thenReturn("1");
         when(roleRepository.findByName(anyString())).thenReturn(new Role());
-        userService.save(new UserDto("test","test@test.com","1", "1", new HashSet<>(),
-                new HashSet<>(), new HashSet<>()));
+        userService.save(new UserDto("test","test@test.com","1", "1", new HashSet<>()));
         verify(userRepository,times(1)).save(any(User.class));
         verify(bCryptPasswordEncoder,times(1)).encode(anyString());
         verify(roleRepository,times(1)).findByName(anyString());
@@ -65,5 +65,33 @@ class UserServiceImplTest {
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             userService.findByUsername("Test");
         });
+    }
+
+    @Test
+    void findByIdIsFound() {
+        Optional<User> user = Optional.of(User.builder().id(1L).build());
+        when(userRepository.findById(anyLong())).thenReturn(user);
+
+        User userFounded = userService.findById(1L);
+
+        assertNotNull(userFounded);
+        assertEquals(1L, userFounded.getId());
+    }
+
+    @Test
+    void findByIdNotFound() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            userService.findById(1L);
+        });
+    }
+
+    @Test
+    void update() {
+        User user = User.builder().id(1L).username("Test").build();
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        User userUpdated = userService.update(user);
+        assertEquals(user.getId(),userUpdated.getId());
+        assertEquals(user.getUsername(),userUpdated.getUsername());
     }
 }
