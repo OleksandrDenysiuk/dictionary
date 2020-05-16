@@ -1,6 +1,7 @@
 package com.portfolio.dictionary.bootstrap;
 
 
+import com.portfolio.dictionary.model.Category;
 import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.repository.RoleRepository;
 import com.portfolio.dictionary.repository.UserRepository;
@@ -25,6 +26,11 @@ public class UserInit implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        Category category = Category.builder()
+                .id(1L)
+                .name("Hello")
+                .build();
+
         User admin = User.builder()
                 .id(1L)
                 .username("admin")
@@ -32,7 +38,10 @@ public class UserInit implements ApplicationListener<ContextRefreshedEvent> {
                 .password(cryptPasswordEncoder.encode("1"))
                 .active(true)
                 .roles(Collections.singleton(roleRepository.findByName("ADMIN")))
+                .categories(Collections.singleton(category))
                 .build();
+
+        category.setUser(admin);
 
         userRepository.save(admin);
     }
