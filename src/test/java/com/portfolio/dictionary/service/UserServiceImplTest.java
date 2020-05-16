@@ -13,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.HashSet;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -39,7 +41,8 @@ class UserServiceImplTest {
 
         when(bCryptPasswordEncoder.encode(anyString())).thenReturn("1");
         when(roleRepository.findByName(anyString())).thenReturn(new Role());
-        userService.save(new UserDto("test","test@test.com","1", "1"));
+        userService.save(new UserDto("test","test@test.com","1", "1", new HashSet<>(),
+                new HashSet<>(), new HashSet<>()));
         verify(userRepository,times(1)).save(any(User.class));
         verify(bCryptPasswordEncoder,times(1)).encode(anyString());
         verify(roleRepository,times(1)).findByName(anyString());
