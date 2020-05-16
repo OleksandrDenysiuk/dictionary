@@ -1,7 +1,5 @@
 package com.portfolio.dictionary.dto;
 
-import com.portfolio.dictionary.model.Category;
-import com.portfolio.dictionary.model.Test;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,9 +31,6 @@ public class UserDto {
     @NotEmpty
     private String passwordConfirm;
 
-    private Set<String> roles;
+    private Set<CategoryDto> categories;
 
-    private Set<Category> categories;
-
-    private Set<Test> tests;
 }
