@@ -22,13 +22,13 @@ public class UserController {
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("user", new UserDto());
-        return "registrationForm";
+        return "authentication/registrationForm";
     }
 
     @PostMapping("/registration")
     public String registration(@ModelAttribute("user") @Valid UserDto user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "registrationForm";
+            return "authentication/registrationForm";
         }
         userService.save(user);
         return "redirect:/";
@@ -43,7 +43,7 @@ public class UserController {
         if (logout != null)
             model.addAttribute("message", "You have been logged out successfully.");
 
-        return "loginForm";
+        return "authentication/loginForm";
     }
 
 }

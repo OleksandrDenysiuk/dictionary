@@ -38,7 +38,7 @@ class UserControllerTest {
         mockMvc.perform(get("/registration"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("user"))
-                .andExpect(view().name("registrationForm"));
+                .andExpect(view().name("authentication/registrationForm"));
     }
 
     @Test
@@ -58,14 +58,14 @@ class UserControllerTest {
 
         mockMvc.perform(post("/registration"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("registrationForm"));
+                .andExpect(view().name("authentication/registrationForm"));
     }
 
     @Test
     void login() throws Exception {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("loginForm"));
+                .andExpect(view().name("authentication/loginForm"));
     }
 
     @Test
@@ -74,7 +74,7 @@ class UserControllerTest {
                 .param("error", ""))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("error"))
-                .andExpect(view().name("loginForm"));
+                .andExpect(view().name("authentication/loginForm"));
     }
 
     @Test
@@ -83,6 +83,6 @@ class UserControllerTest {
                 .param("logout", ""))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("message"))
-                .andExpect(view().name("loginForm"));
+                .andExpect(view().name("authentication/loginForm"));
     }
 }
