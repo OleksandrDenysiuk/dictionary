@@ -1,5 +1,6 @@
 package com.portfolio.dictionary.service;
 
+import com.portfolio.dictionary.dto.CategoryDto;
 import com.portfolio.dictionary.model.Category;
 import com.portfolio.dictionary.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -37,5 +40,21 @@ class CategoryServiceImplTest {
         verify(userService, times(1)).findById(anyLong());
         verify(userService,times(1)).update(any(User.class));
 
+    }
+
+    @Test
+    void findByCategoryIdAndUsername() {
+        Category category = Category.builder().id(1L).build();
+        User user = User.builder().id(1L).build();
+        category.setUser(user);
+        user.getCategories().add(category);
+
+        when(userService.findById(anyLong())).thenReturn(user);
+
+        CategoryDto categoryDto = categoryService.findByCategoryIdAndUserId(1L,1L);
+
+        assertNotNull(categoryDto);
+        assertEquals(1L,categoryDto.getId());
+        assertEquals(1L,categoryDto.getUserId());
     }
 }
