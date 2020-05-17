@@ -85,13 +85,4 @@ class UserServiceImplTest {
             userService.findById(1L);
         });
     }
-
-    @Test
-    void update() {
-        User user = User.builder().id(1L).username("Test").build();
-        when(userRepository.save(any(User.class))).thenReturn(user);
-        User userUpdated = userService.update(user);
-        assertEquals(user.getId(),userUpdated.getId());
-        assertEquals(user.getUsername(),userUpdated.getUsername());
-    }
 }
