@@ -34,6 +34,24 @@ public class CategoryController {
         return "category/index";
     }
 
+    @GetMapping("/category/{id}/delete")
+    public String delete(@AuthenticationPrincipal AccountDetails accountDetails,
+                         @PathVariable("id") String id){
+        User user = userService.findByUsername(accountDetails.getUsername());
+        categoryService.delete(Long.valueOf(id), user.getId());
+        return "redirect:/";
+    }
+
+    @PostMapping("/category/{id}/update")
+    public String update(@AuthenticationPrincipal AccountDetails accountDetails,
+                         @PathVariable("id")String categoryId,
+                         @RequestParam("categoryName") String name){
+        User user = userService.findByUsername(accountDetails.getUsername());
+        categoryService.update(name,Long.valueOf(categoryId), user.getId());
+        return "redirect:/category/" + categoryId;
+    }
+
+
     @PostMapping("/category/create")
     public String create(@AuthenticationPrincipal AccountDetails details,
                          @RequestParam("categoryName") String name){
