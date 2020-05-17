@@ -1,5 +1,6 @@
 package com.portfolio.dictionary.controller;
 
+import com.portfolio.dictionary.dto.CategoryDto;
 import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.service.CategoryService;
 import com.portfolio.dictionary.service.UserService;
@@ -14,9 +15,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +36,21 @@ class CategoryControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+    }
+
+    @Test
+    void getOne() throws Exception {
+        User user = User.builder().id(1L).username("test").build();
+        CategoryDto category = CategoryDto.builder().id(1L).build();
+
+        when(userService.findByUsername(anyString())).thenReturn(user);
+        when(categoryService.findByCategoryIdAndUserId(anyLong(),anyLong())).thenReturn(category);
+
+        mockMvc.perform(get("/category/1").param("username","test"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists("category"))
+                .andExpect(view().name("category/index"));
     }
 
     @Test
