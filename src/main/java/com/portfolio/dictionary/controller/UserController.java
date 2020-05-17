@@ -1,13 +1,13 @@
 package com.portfolio.dictionary.controller;
 
 import com.portfolio.dictionary.dto.UserDto;
+import com.portfolio.dictionary.mapper.UserMapper;
+import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -46,4 +46,9 @@ public class UserController {
         return "authentication/loginForm";
     }
 
+    @GetMapping("/api/user/{id}")
+    public @ResponseBody UserDto getUserDto(@PathVariable("id") String userId) {
+        User user = userService.findById(Long.valueOf(userId));
+        return UserMapper.INSTANCE.toDto(user);
+    }
 }

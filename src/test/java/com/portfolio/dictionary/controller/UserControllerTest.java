@@ -85,4 +85,9 @@ class UserControllerTest {
                 .andExpect(model().attributeExists("message"))
                 .andExpect(view().name("authentication/loginForm"));
     }
+
+    @Test
+    void getUserDto() {
+
+    }
 }
