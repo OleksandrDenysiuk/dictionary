@@ -20,7 +20,7 @@ class UserMapperTest {
     @Test
     void toEntity() {
 
-        UserDto userDto = new UserDto("test", "test@test.com", "5", "5", new HashSet<>(), new HashSet<>(), new HashSet<>());
+        UserDto userDto = new UserDto("test", "test@test.com", "5", "5", new HashSet<>());
 
         //when
         User user = UserMapper.INSTANCE.toEntity(userDto);
