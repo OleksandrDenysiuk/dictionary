@@ -24,12 +24,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDto userDto) {
+    public User save(UserDto userDto) {
         User user = UserMapper.INSTANCE.toEntity(userDto);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.getRoles().add(roleRepository.findByName("USER"));
         user.setActive(true);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -51,10 +51,5 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User not found");
         }
 
-    }
-
-    @Override
-    public User update(User user) {
-        return userRepository.save(user);
     }
 }
