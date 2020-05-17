@@ -33,8 +33,9 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-outline-primary">Change name</button>
-                <button type="button" class="btn btn-outline-primary">Delete category</button>
+                <button type="button" data-toggle="modal"
+                   data-target="#formChangeCategoryNameModal" class="btn btn-outline-primary">Change name</button>
+                <a  th:href="'/category/' + ${category.id} + '/delete'" type="button" class="btn btn-outline-primary">Delete category</a>
             </div>
         </div>
         <div class="col-sm-2 text-right">
@@ -62,14 +63,44 @@
         </tbody>
     </table>
 </div>
-<!-- Modal -->
+<!-- Modal to change category name-->
+<div class="modal fade" id="formChangeCategoryNameModal" tabindex="-1" role="dialog"
+     aria-labelledby="formChangeCategoryNameLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formChangeCategoryNameLabel">Change category name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" th:action="'/category/' + ${category.id} + '/update'">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" name="categoryName"
+                               placeholder="Enter the name">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to change category name-->
 <div class="modal fade" id="formCreateCategoryModal" tabindex="-1" role="dialog"
      aria-labelledby="formCreateCategoryModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="formCreateCategoryModalLabel">Create category</h5>
+                <h5 class="modal-title" id="formCreateCategoryModalLabel">Change category name</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -78,8 +109,8 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" name="categoryName"
+                        <label for="name1">Name:</label>
+                        <input type="text" class="form-control" id="name1" name="categoryName"
                                placeholder="Enter the name">
                     </div>
 
