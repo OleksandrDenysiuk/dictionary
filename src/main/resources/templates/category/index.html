@@ -35,34 +35,43 @@
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" data-toggle="modal"
                    data-target="#formChangeCategoryNameModal" class="btn btn-outline-primary">Change name</button>
-                <a  th:href="'/category/' + ${category.id} + '/delete'" type="button" class="btn btn-outline-primary">Delete category</a>
+                <a th:href="'/category/' + ${category.id} + '/delete'" class="btn btn-outline-primary">Delete category</a>
             </div>
         </div>
         <div class="col-sm-2 text-right">
-            <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#formCreateCategoryModal">Add word
-            </button>
+            <button type="button" id="addWordButton" class="btn btn-primary"
+                    th:data-action="'/category/'+ ${category.id} + '/word/create'"
+                    data-toggle="modal"
+                    data-target="#formAddWordModal">Add word</button>
         </div>
     </div>
     <table class="table">
         <thead class="thead-light">
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Word</th>
+            <th scope="col">Translation</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+        <tr th:each="word : ${category.getWords()}">
+            <td th:text="${word.word}">Mark</td>
+            <td th:text="${word.translation}">Mark</td>
+            <td><button type="button" data-target="#formAddWordModal" data-toggle="modal"
+                        th:data-action="'/category/'+ ${category.id} + '/word/' + ${word.id} + '/update'"
+                        th:data-word="${word.word}"
+                        th:data-translation="${word.translation}">Edit</button></td>
+            <td><a th:href="'/category/'+ ${category.id} + '/word/' + ${word.id} + '/delete'">Delete</a></td>
         </tr>
         </tbody>
     </table>
+    <div class="alert alert-light text-center mb-0" role="alert">
+        <h5>Category is empty</h5>
+    </div>
 </div>
+
+
 <!-- Modal to change category name-->
 <div class="modal fade" id="formChangeCategoryNameModal" tabindex="-1" role="dialog"
      aria-labelledby="formChangeCategoryNameLabel"
@@ -93,31 +102,35 @@
     </div>
 </div>
 
-<!-- Modal to change category name-->
-<div class="modal fade" id="formCreateCategoryModal" tabindex="-1" role="dialog"
-     aria-labelledby="formCreateCategoryModalLabel"
+<!-- Modal to add new word to category-->
+<div class="modal fade" id="formAddWordModal" tabindex="-1" role="dialog"
+     aria-labelledby="formAddWordLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="formCreateCategoryModalLabel">Change category name</h5>
+                <h5 class="modal-title" id="formAddWordLabel">Add word</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="/category/create">
+            <form method="post" id="formWord" th:action="'/category/'+ ${category.id} + '/word/create'" th:object="${wordForm}">
+                <input type="hidden" th:value="${wordForm.id}">
                 <div class="modal-body">
-
                     <div class="form-group">
-                        <label for="name1">Name:</label>
-                        <input type="text" class="form-control" id="name1" name="categoryName"
-                               placeholder="Enter the name">
+                        <label for="word">Word:</label>
+                        <input type="text" class="form-control" id="word" name="word"
+                               placeholder="Enter the word" th:field="*{word}">
                     </div>
-
+                    <div class="form-group">
+                        <label for="translation">Translation:</label>
+                        <input type="text" class="form-control" id="translation" name="translation"
+                               placeholder="Enter the translation" th:field="*{translation}">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </div>
             </form>
         </div>
@@ -132,5 +145,19 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script>
+    $('#formAddWordModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var word = button.data('word'); // Extract info from data-* attributes
+        var translation = button.data('translation'); // Extract info from data-* attributes
+        var action = button.data('action'); // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this);
+        modal.find('#word').val(word);
+        modal.find('#translation').val(translation);
+        $('#formWord').attr('action', action);
+    });
+</script>
 </body>
 </html>
