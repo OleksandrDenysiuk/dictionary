@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,4 +20,6 @@ public class CategoryDto {
     private String name;
 
     private Long userId;
+
+    private Set<WordDto> words;
 }
