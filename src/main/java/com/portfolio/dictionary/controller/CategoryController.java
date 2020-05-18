@@ -1,6 +1,7 @@
 package com.portfolio.dictionary.controller;
 
 import com.portfolio.dictionary.dto.CategoryDto;
+import com.portfolio.dictionary.dto.WordDto;
 import com.portfolio.dictionary.mapper.UserMapper;
 import com.portfolio.dictionary.model.AccountDetails;
 import com.portfolio.dictionary.model.User;
@@ -9,10 +10,7 @@ import com.portfolio.dictionary.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class CategoryController {
@@ -31,6 +29,7 @@ public class CategoryController {
         CategoryDto categoryDto = categoryService.findByCategoryIdAndUserId(Long.valueOf(categoryId), user.getId());
         model.addAttribute("user", UserMapper.INSTANCE.toDto(user));
         model.addAttribute("category", categoryDto);
+        model.addAttribute("wordForm", new WordDto());
         return "category/index";
     }
 
@@ -57,5 +56,11 @@ public class CategoryController {
                          @RequestParam("categoryName") String name){
         categoryService.create(name,userService.findByUsername(details.getUsername()).getId());
         return "redirect:/";
+    }
+    @GetMapping("/api/user/{user}/category/{category}")
+    public @ResponseBody CategoryDto getUserDto(@PathVariable("user") String userId,
+                       @PathVariable("category") String categoryId) {
+        CategoryDto categoryDto = categoryService.findByCategoryIdAndUserId(Long.valueOf(categoryId), Long.valueOf(userId));
+        return categoryDto;
     }
 }
