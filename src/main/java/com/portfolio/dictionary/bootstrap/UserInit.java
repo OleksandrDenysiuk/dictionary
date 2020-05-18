@@ -3,6 +3,7 @@ package com.portfolio.dictionary.bootstrap;
 
 import com.portfolio.dictionary.model.Category;
 import com.portfolio.dictionary.model.User;
+import com.portfolio.dictionary.model.Word;
 import com.portfolio.dictionary.repository.RoleRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.context.ApplicationListener;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.HashSet;
 
 @Component
 public class UserInit implements ApplicationListener<ContextRefreshedEvent> {
@@ -29,7 +31,16 @@ public class UserInit implements ApplicationListener<ContextRefreshedEvent> {
         Category category = Category.builder()
                 .id(1L)
                 .name("Hello")
+                .words(new HashSet<>())
                 .build();
+
+        Word word = new Word();
+        word.setId(1L);
+        word.setWord("word1");
+        word.setTranslation("translation1");
+        word.setCategory(category);
+
+        category.getWords().add(word);
 
         User admin = User.builder()
                 .id(1L)
@@ -38,8 +49,10 @@ public class UserInit implements ApplicationListener<ContextRefreshedEvent> {
                 .password(cryptPasswordEncoder.encode("1"))
                 .active(true)
                 .roles(Collections.singleton(roleRepository.findByName("ADMIN")))
-                .categories(Collections.singleton(category))
+                .categories(new HashSet<>())
                 .build();
+
+        admin.getCategories().add(category);
 
         category.setUser(admin);
 
