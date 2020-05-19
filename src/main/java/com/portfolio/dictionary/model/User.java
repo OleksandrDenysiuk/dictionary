@@ -34,10 +34,6 @@ public class User{
                 mappedBy = "user")
     private Set<Category> categories;
 
-    @OneToMany(cascade = CascadeType.ALL,
-    mappedBy = "user")
-    private Set<Test> tests;
-
     public Set<Role> getRoles() {
         if(roles == null){
             this.roles = new HashSet<>();
@@ -50,13 +46,6 @@ public class User{
             this.categories = new HashSet<>();
         }
         return categories;
-    }
-
-    public Set<Test> getTests() {
-        if(tests == null){
-            this.tests = new HashSet<>();
-        }
-        return tests;
     }
 
 }

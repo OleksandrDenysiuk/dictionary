@@ -3,8 +3,6 @@ package com.portfolio.dictionary.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -26,6 +24,4 @@ public class Word {
     @JoinColumn(name = "fk_category")
     private Category category;
 
-    @ManyToMany(mappedBy = "words")
-    private Set<Test> tests = new HashSet<>();
 }
