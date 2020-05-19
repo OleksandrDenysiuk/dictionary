@@ -45,8 +45,7 @@ public class CategoryController {
                          @PathVariable("id")String categoryId,
                          @RequestParam("categoryName") String name){
         UserDto user = userService.findByUsername(accountDetails.getUsername());
-        categoryService.update(name,Long.valueOf(categoryId), user.getId());
-        return "redirect:/category/" + categoryId;
+        return "redirect:/category/" + categoryService.update(name,Long.valueOf(categoryId), user.getId()).getId();
     }
 
 

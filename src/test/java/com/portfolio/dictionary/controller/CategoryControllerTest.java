@@ -44,9 +44,9 @@ class CategoryControllerTest {
         CategoryDto category = CategoryDto.builder().id(1L).build();
 
         when(userService.findByUsername(anyString())).thenReturn(user);
-        when(categoryService.findByCategoryIdAndUserId(anyLong(),anyLong())).thenReturn(category);
+        when(categoryService.findByCategoryIdAndUserId(anyLong(), anyLong())).thenReturn(category);
 
-        mockMvc.perform(get("/category/1").param("username","test"))
+        mockMvc.perform(get("/category/1").param("username", "test"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("user"))
                 .andExpect(model().attributeExists("category"))
@@ -58,10 +58,39 @@ class CategoryControllerTest {
         UserDto user = UserDto.builder().id(1L).username("test").build();
         when(userService.findByUsername(anyString())).thenReturn(user);
         mockMvc.perform(post("/category/create")
-        .param("username","test")
-        .param("categoryName", "categoryName"))
+                .param("username", "test")
+                .param("categoryName", "categoryName"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
-        verify(categoryService,times(1)).create(anyString(),anyLong());
+        verify(categoryService, times(1)).create(anyString(), anyLong());
+    }
+
+    @Test
+    void delete() throws Exception {
+        when(userService.findByUsername(anyString())).thenReturn(UserDto.builder().id(1L).build());
+
+        mockMvc.perform(get("/category/1/delete").param("username", "test"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        verify(userService, times(1)).findByUsername(anyString());
+        verify(categoryService, times(1)).delete(anyLong(), anyLong());
+    }
+
+    @Test
+    void update() throws Exception {
+        when(userService.findByUsername(anyString()))
+                .thenReturn(UserDto.builder().id(1L).build());
+        when(categoryService.update(anyString(), anyLong(), anyLong()))
+                .thenReturn(CategoryDto.builder()
+                .id(1L).build());
+        mockMvc.perform(post("/category/1/update")
+                .param("username", "test")
+                .param("categoryName", "test"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/category/1"));
+
+        verify(userService, times(1)).findByUsername(anyString());
+        verify(categoryService, times(1)).update(anyString(),anyLong(), anyLong());
     }
 }
