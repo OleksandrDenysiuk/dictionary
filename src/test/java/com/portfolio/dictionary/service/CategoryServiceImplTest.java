@@ -10,11 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -36,13 +35,12 @@ class CategoryServiceImplTest {
 
     @Test
     void create() {
-        Optional<User> user = Optional.of(User.builder().id(1L).build());
-        Category category = Category.builder().id(1L).name("test").build();
-        User userWithCategory = User.builder().id(1L).categories(Collections.singleton(category)).build();
+        Optional<User> user = Optional.of(User.builder().id(1L).categories(new HashSet<>()).build());
         when(userRepository.findById(anyLong())).thenReturn(user);
-        when(userRepository.save(any(User.class))).thenReturn(userWithCategory);
 
         categoryService.create("test", 1L);
+
+        assertEquals(1, user.get().getCategories().size());
         verify(userRepository, times(1)).findById(anyLong());
         verify(categoryRepository,times(1)).save(any(Category.class));
 
@@ -62,5 +60,32 @@ class CategoryServiceImplTest {
         assertNotNull(categoryDto);
         assertEquals(1L,categoryDto.getId());
         assertEquals(1L,categoryDto.getUserId());
+    }
+
+    @Test
+    void update(){
+        Category category = Category.builder().id(1L).build();
+
+        when(categoryRepository.findByIdAndUserId(anyLong(),anyLong())).thenReturn(category);
+
+        categoryService.update("test",1L,1L);
+
+        assertEquals(1L,category.getId());
+        assertEquals("test",category.getName());
+    }
+
+    @Test
+    void delete(){
+        Category category = Category.builder().id(1L).build();
+        User user = User.builder().id(1L).build();
+        category.setUser(user);
+        user.getCategories().add(category);
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(categoryRepository.findByIdAndUserId(anyLong(),anyLong())).thenReturn(category);
+
+        categoryService.delete(1L,1L);
+        assertEquals(0,user.getCategories().size());
+        assertNull(category.getUser());
     }
 }

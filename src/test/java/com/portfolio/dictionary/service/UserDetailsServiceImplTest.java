@@ -1,5 +1,6 @@
 package com.portfolio.dictionary.service;
 
+import com.portfolio.dictionary.model.AccountDetails;
 import com.portfolio.dictionary.model.Role;
 import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.repository.UserRepository;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -46,7 +46,7 @@ class UserDetailsServiceImplTest {
 
         when(userRepository.findByUsername(anyString())).thenReturn(user);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername("test");
+        AccountDetails userDetails = (AccountDetails) userDetailsService.loadUserByUsername("test");
 
         assertNotNull(userDetails);
         assertEquals("1",userDetails.getPassword());

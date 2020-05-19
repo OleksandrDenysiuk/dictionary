@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,18 +33,28 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userRepository,roleRepository,bCryptPasswordEncoder);
+        userService = new UserServiceImpl(userRepository, roleRepository, bCryptPasswordEncoder);
     }
 
     @Test
     void save() {
 
+        UserDto userDto = UserDto.builder()
+                .username("test")
+                .password("1")
+                .passwordConfirm("1")
+                .email("test@test.com")
+                .build();
+
         when(bCryptPasswordEncoder.encode(anyString())).thenReturn("1");
         when(roleRepository.findByName(anyString())).thenReturn(new Role());
-        userService.save(new UserDto(1L,"test","test@test.com","1", "1", new HashSet<>()));
-        verify(userRepository,times(1)).save(any(User.class));
-        verify(bCryptPasswordEncoder,times(1)).encode(anyString());
-        verify(roleRepository,times(1)).findByName(anyString());
+        when(userRepository.findByUsername(anyString())).thenReturn(null);
+
+        userService.save(userDto);
+
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(bCryptPasswordEncoder, times(1)).encode(anyString());
+        verify(roleRepository, times(1)).findByName(anyString());
     }
 
     @Test
@@ -60,7 +69,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findByUsernameNotFound(){
+    void findByUsernameNotFound() {
         when(userRepository.findByUsername(anyString())).thenReturn(null);
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             userService.findByUsername("Test");
