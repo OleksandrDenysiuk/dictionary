@@ -11,6 +11,4 @@ public interface WordMapper {
     WordMapper INSTANCE = Mappers.getMapper(WordMapper.class);
 
     WordDto toDto(Word word);
-
-    Word toEntity(WordDto dto);
 }

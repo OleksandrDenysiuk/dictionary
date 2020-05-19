@@ -33,7 +33,11 @@ public class WordServiceImpl implements WordService {
 
             if (optionalCategory.isPresent()) {
                 Category category = optionalCategory.get();
-                Word word = WordMapper.INSTANCE.toEntity(dto);
+                Word word = Word.builder()
+                        .id(dto.getId())
+                        .word(dto.getWord())
+                        .translation(dto.getTranslation())
+                        .build();
                 word.setCategory(category);
                 category.getWords().add(word);
                 return WordMapper.INSTANCE.toDto(wordRepository.save(word));

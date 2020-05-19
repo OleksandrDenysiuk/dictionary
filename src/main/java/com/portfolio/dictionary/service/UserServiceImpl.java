@@ -27,7 +27,11 @@ public class UserServiceImpl implements UserService {
     public UserDto save(UserDto userDto) {
         User user = userRepository.findByUsername(userDto.getUsername());
         if(user == null){
-            user = UserMapper.INSTANCE.toEntity(userDto);
+            user = User.builder()
+                    .id(userDto.getId())
+                    .username(userDto.getUsername())
+                    .email(userDto.getEmail())
+                    .build();
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             user.getRoles().add(roleRepository.findByName("USER"));
             user.setActive(true);
