@@ -1,8 +1,6 @@
 package com.portfolio.dictionary.controller;
 
 import com.portfolio.dictionary.dto.UserDto;
-import com.portfolio.dictionary.mapper.UserMapper;
-import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,7 +46,7 @@ public class UserController {
 
     @GetMapping("/api/user/{id}")
     public @ResponseBody UserDto getUserDto(@PathVariable("id") String userId) {
-        User user = userService.findById(Long.valueOf(userId));
-        return UserMapper.INSTANCE.toDto(user);
+        UserDto user = userService.findById(Long.valueOf(userId));
+        return user;
     }
 }

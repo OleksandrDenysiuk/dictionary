@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class AccountDetails implements UserDetails {
+    private Long userId;
     private String username;
     private String password;
     private boolean active;

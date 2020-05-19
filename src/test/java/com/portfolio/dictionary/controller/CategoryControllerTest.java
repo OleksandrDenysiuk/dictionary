@@ -1,7 +1,7 @@
 package com.portfolio.dictionary.controller;
 
 import com.portfolio.dictionary.dto.CategoryDto;
-import com.portfolio.dictionary.model.User;
+import com.portfolio.dictionary.dto.UserDto;
 import com.portfolio.dictionary.service.CategoryService;
 import com.portfolio.dictionary.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ class CategoryControllerTest {
 
     @Test
     void getOne() throws Exception {
-        User user = User.builder().id(1L).username("test").build();
+        UserDto user = UserDto.builder().id(1L).username("test").build();
         CategoryDto category = CategoryDto.builder().id(1L).build();
 
         when(userService.findByUsername(anyString())).thenReturn(user);
@@ -55,7 +55,7 @@ class CategoryControllerTest {
 
     @Test
     void create() throws Exception {
-        User user = User.builder().id(1L).username("test").build();
+        UserDto user = UserDto.builder().id(1L).username("test").build();
         when(userService.findByUsername(anyString())).thenReturn(user);
         mockMvc.perform(post("/category/create")
         .param("username","test")

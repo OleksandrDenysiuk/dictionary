@@ -4,6 +4,7 @@ import com.portfolio.dictionary.dto.CategoryDto;
 import com.portfolio.dictionary.mapper.CategoryMapper;
 import com.portfolio.dictionary.model.Category;
 import com.portfolio.dictionary.model.User;
+import com.portfolio.dictionary.repository.CategoryRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,72 +13,45 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(UserRepository userRepository) {
+    public CategoryServiceImpl(UserRepository userRepository, CategoryRepository categoryRepository) {
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public Category create(String name, Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public CategoryDto create(String name, Long userId) {
 
+        Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             Category category = Category.builder().name(name).user(user).build();
             user.getCategories().add(category);
-            User userSave = userRepository.save(user);
-
-            Optional<Category> optionalCategory = userSave.getCategories()
-                    .stream()
-                    .filter(category1 -> (category1.getName().equals(name))).findAny();
-
-            if (optionalCategory.isPresent()) {
-                return optionalCategory.get();
-            } else {
-                throw new RuntimeException("Category not saved");
-            }
+            return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
         } else {
             throw new RuntimeException("User not found");
         }
     }
 
     @Override
-    public Category update(String name, Long categoryId, Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            Optional<Category> categoryOptional = user.getCategories().stream()
-                    .filter(category -> categoryId.equals(category.getId())).findAny();
-
-            if (categoryOptional.isPresent()) {
-                Category category = categoryOptional.get();
-                category.setName(name);
-                user.getCategories().add(category);
-                User userSave = userRepository.save(user);
-                Optional<Category> categoryOptionalSave = userSave.getCategories().stream()
-                        .filter(category1 -> categoryId.equals(category.getId())).findAny();
-                if (categoryOptionalSave.isPresent()) {
-                    return categoryOptionalSave.get();
-                } else {
-                    throw new RuntimeException("Category not found");
-                }
-            } else {
-                throw new RuntimeException("Category not found");
-            }
-        } else {
-            throw new RuntimeException("User not found");
+    public CategoryDto update(String name, Long categoryId, Long userId) {
+        Category category = categoryRepository.findByIdAndUserId(categoryId,userId);
+        if(category != null){
+            category.setName(name);
+            return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
+        }else {
+            throw  new RuntimeException("Category not found");
         }
     }
 
     @Override
     public CategoryDto findByCategoryIdAndUserId(Long categoryId, Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            Optional<Category> categoryFound = user.getCategories().stream().filter(category -> categoryId.equals(category.getId())).findFirst();
-            return categoryFound.map(CategoryMapper.INSTANCE::toDto).orElse(null);
+        Category category = categoryRepository.findByIdAndUserId(categoryId,userId);
+        if(category != null){
+            return CategoryMapper.INSTANCE.toDto(category);
         }else {
-            throw  new RuntimeException("User not found");
+            throw  new RuntimeException("Category not found");
         }
     }
 
@@ -86,13 +60,16 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            Optional<Category> categoryFound = user.getCategories().stream().filter(category -> categoryId.equals(category.getId())).findFirst();
-            if (categoryFound.isPresent()) {
-                Category category = categoryFound.get();
+            Category category = categoryRepository.findByIdAndUserId(categoryId,userId);
+            if(category != null){
                 user.getCategories().remove(category);
                 category.setUser(null);
-                userRepository.save(user);
+                categoryRepository.delete(category);
+            }else {
+                throw  new RuntimeException("Category not found");
             }
+        }else {
+            throw new RuntimeException("User not found");
         }
     }
 }

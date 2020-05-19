@@ -2,7 +2,6 @@ package com.portfolio.dictionary.controller;
 
 
 import com.portfolio.dictionary.dto.UserDto;
-import com.portfolio.dictionary.mapper.UserMapper;
 import com.portfolio.dictionary.model.AccountDetails;
 import com.portfolio.dictionary.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,9 +21,9 @@ public class IndexController {
     @GetMapping("/")
     public String welcome(@AuthenticationPrincipal AccountDetails details,
                           Model model) {
-        UserDto userDto = UserMapper.INSTANCE.toDto(userService.findByUsername(details.getUsername()));
+        UserDto user = userService.findByUsername(details.getUsername());
 
-        model.addAttribute("user", userDto);
+        model.addAttribute("user", user);
         return "index";
     }
 }

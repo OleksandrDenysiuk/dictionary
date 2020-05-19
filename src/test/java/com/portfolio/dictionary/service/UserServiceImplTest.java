@@ -42,7 +42,7 @@ class UserServiceImplTest {
 
         when(bCryptPasswordEncoder.encode(anyString())).thenReturn("1");
         when(roleRepository.findByName(anyString())).thenReturn(new Role());
-        userService.save(new UserDto("test","test@test.com","1", "1", new HashSet<>()));
+        userService.save(new UserDto(1L,"test","test@test.com","1", "1", new HashSet<>()));
         verify(userRepository,times(1)).save(any(User.class));
         verify(bCryptPasswordEncoder,times(1)).encode(anyString());
         verify(roleRepository,times(1)).findByName(anyString());
@@ -53,7 +53,7 @@ class UserServiceImplTest {
         User user = User.builder().id(1L).username("Test").build();
         when(userRepository.findByUsername(anyString())).thenReturn(user);
 
-        User userFounded = userService.findByUsername("Test");
+        UserDto userFounded = userService.findByUsername("Test");
 
         assertNotNull(userFounded);
         assertEquals("Test", userFounded.getUsername());
@@ -72,7 +72,7 @@ class UserServiceImplTest {
         Optional<User> user = Optional.of(User.builder().id(1L).build());
         when(userRepository.findById(anyLong())).thenReturn(user);
 
-        User userFounded = userService.findById(1L);
+        UserDto userFounded = userService.findById(1L);
 
         assertNotNull(userFounded);
         assertEquals(1L, userFounded.getId());

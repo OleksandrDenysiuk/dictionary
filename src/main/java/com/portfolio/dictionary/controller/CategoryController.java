@@ -1,10 +1,9 @@
 package com.portfolio.dictionary.controller;
 
 import com.portfolio.dictionary.dto.CategoryDto;
+import com.portfolio.dictionary.dto.UserDto;
 import com.portfolio.dictionary.dto.WordDto;
-import com.portfolio.dictionary.mapper.UserMapper;
 import com.portfolio.dictionary.model.AccountDetails;
-import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.service.CategoryService;
 import com.portfolio.dictionary.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,10 +24,10 @@ public class CategoryController {
     @GetMapping("/category/{id}")
     public String getOne(@AuthenticationPrincipal AccountDetails accountDetails,
                          @PathVariable("id")String categoryId, Model model){
-        User user = userService.findByUsername(accountDetails.getUsername());
-        CategoryDto categoryDto = categoryService.findByCategoryIdAndUserId(Long.valueOf(categoryId), user.getId());
-        model.addAttribute("user", UserMapper.INSTANCE.toDto(user));
-        model.addAttribute("category", categoryDto);
+        UserDto user = userService.findByUsername(accountDetails.getUsername());
+        CategoryDto category = categoryService.findByCategoryIdAndUserId(Long.valueOf(categoryId), user.getId());
+        model.addAttribute("user", user);
+        model.addAttribute("category", category);
         model.addAttribute("wordForm", new WordDto());
         return "category/index";
     }
@@ -36,7 +35,7 @@ public class CategoryController {
     @GetMapping("/category/{id}/delete")
     public String delete(@AuthenticationPrincipal AccountDetails accountDetails,
                          @PathVariable("id") String id){
-        User user = userService.findByUsername(accountDetails.getUsername());
+        UserDto user = userService.findByUsername(accountDetails.getUsername());
         categoryService.delete(Long.valueOf(id), user.getId());
         return "redirect:/";
     }
@@ -45,7 +44,7 @@ public class CategoryController {
     public String update(@AuthenticationPrincipal AccountDetails accountDetails,
                          @PathVariable("id")String categoryId,
                          @RequestParam("categoryName") String name){
-        User user = userService.findByUsername(accountDetails.getUsername());
+        UserDto user = userService.findByUsername(accountDetails.getUsername());
         categoryService.update(name,Long.valueOf(categoryId), user.getId());
         return "redirect:/category/" + categoryId;
     }
@@ -60,7 +59,6 @@ public class CategoryController {
     @GetMapping("/api/user/{user}/category/{category}")
     public @ResponseBody CategoryDto getUserDto(@PathVariable("user") String userId,
                        @PathVariable("category") String categoryId) {
-        CategoryDto categoryDto = categoryService.findByCategoryIdAndUserId(Long.valueOf(categoryId), Long.valueOf(userId));
-        return categoryDto;
+        return categoryService.findByCategoryIdAndUserId(Long.valueOf(categoryId), Long.valueOf(userId));
     }
 }

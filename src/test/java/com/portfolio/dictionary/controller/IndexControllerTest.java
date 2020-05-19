@@ -1,6 +1,6 @@
 package com.portfolio.dictionary.controller;
 
-import com.portfolio.dictionary.model.User;
+import com.portfolio.dictionary.dto.UserDto;
 import com.portfolio.dictionary.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class IndexControllerTest {
 
     @Test
     void loadIndexPage() throws Exception {
-        when(userService.findByUsername(anyString())).thenReturn(new User());
+        when(userService.findByUsername(anyString())).thenReturn(new UserDto());
         mockMvc.perform(get("/")
         .param("username","test"))
                 .andExpect(status().isOk())

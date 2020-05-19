@@ -1,8 +1,8 @@
 package com.portfolio.dictionary.controller;
 
+import com.portfolio.dictionary.dto.UserDto;
 import com.portfolio.dictionary.dto.WordDto;
 import com.portfolio.dictionary.model.AccountDetails;
-import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.service.UserService;
 import com.portfolio.dictionary.service.WordService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,7 +27,7 @@ public class WordController {
     public String delete(@AuthenticationPrincipal AccountDetails details,
                          @PathVariable("categoryId")String categoryId,
                          @ModelAttribute WordDto wordDto){
-        User user = userService.findByUsername(details.getUsername());
+        UserDto user = userService.findByUsername(details.getUsername());
 
         wordDto.setCategoryId(Long.valueOf(categoryId));
 
@@ -41,7 +41,7 @@ public class WordController {
                          @PathVariable("categoryId")String categoryId,
                          @ModelAttribute WordDto wordDto){
 
-        User user = userService.findByUsername(details.getUsername());
+        UserDto user = userService.findByUsername(details.getUsername());
 
         wordDto.setCategoryId(Long.valueOf(categoryId));
 
@@ -55,7 +55,7 @@ public class WordController {
                          @PathVariable("categoryId")String categoryId,
                          @ModelAttribute WordDto wordDto){
 
-        User user = userService.findByUsername(details.getUsername());
+        UserDto user = userService.findByUsername(details.getUsername());
 
         wordDto.setCategoryId(Long.valueOf(categoryId));
 

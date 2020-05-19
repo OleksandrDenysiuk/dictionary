@@ -3,6 +3,7 @@ package com.portfolio.dictionary.service;
 import com.portfolio.dictionary.dto.WordDto;
 import com.portfolio.dictionary.model.Category;
 import com.portfolio.dictionary.model.User;
+import com.portfolio.dictionary.model.Word;
 import com.portfolio.dictionary.repository.UserRepository;
 import com.portfolio.dictionary.repository.WordRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,12 +42,11 @@ class WordServiceImplTest {
         User user = User.builder().id(1L).categories(Collections.singleton(category)).build();
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(userRepository.save(any(User.class))).thenReturn(user);
 
         wordService.save(wordDto, 1L);
 
         verify(userRepository,times(1)).findById(anyLong());
-        verify(userRepository,times(1)).save(any());
+        verify(wordRepository,times(1)).save(any(Word.class));
     }
 
     @Test

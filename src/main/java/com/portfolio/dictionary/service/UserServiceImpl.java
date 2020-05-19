@@ -24,29 +24,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(UserDto userDto) {
+    public UserDto save(UserDto userDto) {
         User user = UserMapper.INSTANCE.toEntity(userDto);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.getRoles().add(roleRepository.findByName("USER"));
         user.setActive(true);
-        return userRepository.save(user);
+        return UserMapper.INSTANCE.toDto(userRepository.save(user));
     }
 
     @Override
-    public User findByUsername(String username) {
+    public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         } else {
-            return user;
+            return UserMapper.INSTANCE.toDto(user);
         }
     }
 
     @Override
-    public User findById(Long id) {
+    public UserDto findById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         if(optionalUser.isPresent()){
-            return optionalUser.get();
+            return UserMapper.INSTANCE.toDto(optionalUser.get());
         }else {
             throw new RuntimeException("User not found");
         }

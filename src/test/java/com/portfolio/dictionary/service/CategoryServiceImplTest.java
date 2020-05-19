@@ -3,6 +3,7 @@ package com.portfolio.dictionary.service;
 import com.portfolio.dictionary.dto.CategoryDto;
 import com.portfolio.dictionary.model.Category;
 import com.portfolio.dictionary.model.User;
+import com.portfolio.dictionary.repository.CategoryRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,15 @@ class CategoryServiceImplTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    CategoryRepository categoryRepository;
+
     CategoryService categoryService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        categoryService = new CategoryServiceImpl(userRepository);
+        categoryService = new CategoryServiceImpl(userRepository, categoryRepository);
     }
 
     @Test
@@ -40,7 +44,7 @@ class CategoryServiceImplTest {
 
         categoryService.create("test", 1L);
         verify(userRepository, times(1)).findById(anyLong());
-        verify(userRepository,times(1)).save(any(User.class));
+        verify(categoryRepository,times(1)).save(any(Category.class));
 
     }
 
@@ -51,7 +55,7 @@ class CategoryServiceImplTest {
         category.setUser(user);
         user.getCategories().add(category);
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(categoryRepository.findByIdAndUserId(anyLong(),anyLong())).thenReturn(category);
 
         CategoryDto categoryDto = categoryService.findByCategoryIdAndUserId(1L,1L);
 

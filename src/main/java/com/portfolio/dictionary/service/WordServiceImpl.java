@@ -22,7 +22,7 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public Word save(WordDto dto, Long userId) {
+    public WordDto save(WordDto dto, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -36,7 +36,7 @@ public class WordServiceImpl implements WordService {
                 Word word = WordMapper.INSTANCE.toEntity(dto);
                 word.setCategory(category);
                 category.getWords().add(word);
-                return wordRepository.save(word);
+                return WordMapper.INSTANCE.toDto(wordRepository.save(word));
             } else {
                 throw new RuntimeException("Category not found");
             }
