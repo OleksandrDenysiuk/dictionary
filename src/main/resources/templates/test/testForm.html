@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dictionary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand mr-auto">My dictionary</a>
+        <span class="navbar-text mr-4" th:text="${user.username}">User name</span>
+        <a class="btn btn-outline-primary my-2 my-sm-0" href="/logout">Logout</a>
+    </nav>
+    <div class="mb-3 mt-3">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Category</a>
+            </li>
+            <li class="nav-item">
+                <a id="createTestBtn" class="nav-link active">Test</a>
+            </li>
+        </ul>
+    </div>
+    <h3 class="text-center mt-4 mb-4">Create test</h3>
+    <form method="post" action="/test/start">
+        <div class="pl-5 pr-5">
+            <select class="form-control col-4 m-auto form-control-lg" name="type">
+                <option th:each="type : ${types}" th:text="${type}" th:value="${type}">Large select</option>
+            </select>
+        </div>
+        <div class="text-center mt-4 mb-4">
+            <button type="submit" class="btn btn-lg btn-primary">Start test</button>
+        </div>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Words</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${user.categories}">
+                <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="categoriesId" th:value="${category.id}">
+                    </div>
+                </td>
+                <td th:text="${category.name}">Mark</td>
+                <td th:text="${category.words.size()}">Mark</td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${user.categories.size() == 0}" class="alert alert-light text-center mb-0" role="alert">
+            <h5>Category is empty</h5>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+</html>
