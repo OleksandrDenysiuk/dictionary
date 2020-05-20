@@ -8,6 +8,8 @@ import com.portfolio.dictionary.repository.CategoryRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,5 +73,24 @@ public class CategoryServiceImpl implements CategoryService {
         }else {
             throw new RuntimeException("User not found");
         }
+    }
+
+    @Override
+    public List<CategoryDto> getListByIdAndUserId(List<String> categoryIdList, Long userId) {
+        List<CategoryDto> categoryDtoList = new ArrayList<>();
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            for(String categoryId : categoryIdList){
+                Category category = categoryRepository.findByIdAndUserId(Long.valueOf(categoryId),userId);
+                if(category != null){
+                    categoryDtoList.add(CategoryMapper.INSTANCE.toDto(category));
+                }else {
+                    throw  new RuntimeException("Category not found");
+                }
+            }
+        }else {
+            throw new RuntimeException("User not found");
+        }
+        return categoryDtoList;
     }
 }
