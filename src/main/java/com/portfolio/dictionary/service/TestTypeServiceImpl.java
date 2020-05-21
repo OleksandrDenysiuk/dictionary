@@ -24,4 +24,15 @@ public class TestTypeServiceImpl implements TestTypeService {
         }
         return types;
     }
+
+    @Override
+    public TestType findByName(String name) {
+        TestType testType = testTypeRepository.findByTypeName(name);
+        if(testType != null){
+            return testType;
+        }else {
+            throw new RuntimeException("Test type no found");
+        }
+
+    }
 }
