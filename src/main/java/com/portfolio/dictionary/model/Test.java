@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Test {
 
-    private TestType type;
+    private String type;
 
     private String result;
 
