@@ -8,9 +8,10 @@ import com.portfolio.dictionary.repository.CategoryRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -76,8 +77,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getListByIdAndUserId(List<String> categoryIdList, Long userId) {
-        List<CategoryDto> categoryDtoList = new ArrayList<>();
+    public Set<CategoryDto> getListByIdAndUserId(List<String> categoryIdList, Long userId) {
+        Set<CategoryDto> categoryDtoList = new HashSet<>();
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             for(String categoryId : categoryIdList){

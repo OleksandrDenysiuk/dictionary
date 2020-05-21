@@ -3,6 +3,7 @@ package com.portfolio.dictionary.service;
 import com.portfolio.dictionary.dto.CategoryDto;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CategoryService {
 
@@ -14,5 +15,5 @@ public interface CategoryService {
 
     void delete(Long categoryId, Long userId);
 
-    List<CategoryDto> getListByIdAndUserId(List<String> categoryIdList, Long userId);
+    Set<CategoryDto> getListByIdAndUserId(List<String> categoryIdList, Long userId);
 }
