@@ -1,7 +1,7 @@
 package com.portfolio.dictionary.model.step;
 
+import com.portfolio.dictionary.dto.WordDto;
 import com.portfolio.dictionary.model.Step;
-import com.portfolio.dictionary.model.Word;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WriteAnswerStep extends Step {
-    private Word word;
+    private WordDto word;
+
+    private String answer;
 }
