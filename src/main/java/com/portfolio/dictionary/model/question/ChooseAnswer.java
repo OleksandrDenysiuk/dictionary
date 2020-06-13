@@ -1,7 +1,6 @@
-package com.portfolio.dictionary.model.step;
+package com.portfolio.dictionary.model.question;
 
-import com.portfolio.dictionary.dto.WordDto;
-import com.portfolio.dictionary.model.Step;
+import com.portfolio.dictionary.model.Question;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +13,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChooseAnswerStep extends Step {
-    private WordDto word;
-
+public class ChooseAnswer extends Question {
     private List<String> variantOfAnswers = new ArrayList<>();
-
-    private String answer;
 }
