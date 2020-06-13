@@ -2,10 +2,10 @@ package com.portfolio.dictionary.service;
 
 import com.portfolio.dictionary.dto.CategoryDto;
 import com.portfolio.dictionary.dto.WordDto;
+import com.portfolio.dictionary.model.Question;
 import com.portfolio.dictionary.model.Test;
 import com.portfolio.dictionary.model.TestType;
-import com.portfolio.dictionary.model.step.ChooseAnswerStep;
-import com.portfolio.dictionary.model.step.WriteAnswerStep;
+import com.portfolio.dictionary.model.question.ChooseAnswer;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,16 +19,15 @@ public class TestServiceImpl implements TestService {
         test.setType(testType.getTypeName());
 
         if (testType.getTypeName().equals("CHOOSE_CORRECT")) {
-            test.setSteps(chooseTranslate(categoryDtoSet));
+            test.setQuestions(chooseTranslate(categoryDtoSet));
         } else {
-            test.setSteps(writeTranslate(categoryDtoSet));
+            test.setQuestions(writeTranslate(categoryDtoSet));
         }
-
         return test;
     }
 
-    private List<ChooseAnswerStep> chooseTranslate(Set<CategoryDto> categoryDtoSet) {
-        List<ChooseAnswerStep> steps = new ArrayList<>();
+    private List<ChooseAnswer> chooseTranslate(Set<CategoryDto> categoryDtoSet) {
+        List<ChooseAnswer> steps = new ArrayList<>();
         Random random = new Random();
         Set<WordDto> wordDtoSet = new HashSet<>();
 
@@ -38,7 +37,7 @@ public class TestServiceImpl implements TestService {
         int amountAnswers = 4;
 
         for (WordDto word : wordDtoSet) {
-            ChooseAnswerStep step = new ChooseAnswerStep();
+            ChooseAnswer step = new ChooseAnswer();
             step.setWord(word);
             step.getVariantOfAnswers().add(word.getTranslation());
             List<WordDto> variants = new ArrayList<>(wordDtoSet);
@@ -60,17 +59,17 @@ public class TestServiceImpl implements TestService {
         return steps;
     }
 
-    private List<WriteAnswerStep> writeTranslate(Set<CategoryDto> categoryDtoSet) {
-        List<WriteAnswerStep> steps = new ArrayList<>();
+    private List<Question> writeTranslate(Set<CategoryDto> categoryDtoSet) {
+        List<Question> questions = new ArrayList<>();
         for (CategoryDto categoryDto : categoryDtoSet) {
             Set<WordDto> wordDtoSet = categoryDto.getWords();
             for (WordDto word : wordDtoSet) {
-                WriteAnswerStep step = new WriteAnswerStep();
-                step.setWord(word);
-                steps.add(step);
+                Question question = new Question();
+                question.setWord(word);
+                questions.add(question);
             }
         }
-        Collections.shuffle(steps);
-        return steps;
+        Collections.shuffle(questions);
+        return questions;
     }
 }
