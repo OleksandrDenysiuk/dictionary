@@ -8,10 +8,8 @@ import com.portfolio.dictionary.repository.CategoryRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -33,6 +31,20 @@ public class CategoryServiceImpl implements CategoryService {
             user.getCategories().add(category);
             return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
         } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @Override
+    public List<CategoryDto> findAll(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            return categoryRepository.findAllByUserId(user.getId()).stream()
+                    .sorted(Comparator.comparing(Category::getId))
+                    .map(CategoryMapper.INSTANCE::toDto)
+                    .collect(Collectors.toList());
+        }else {
             throw new RuntimeException("User not found");
         }
     }
