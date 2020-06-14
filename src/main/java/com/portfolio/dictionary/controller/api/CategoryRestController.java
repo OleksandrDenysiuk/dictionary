@@ -1,5 +1,6 @@
 package com.portfolio.dictionary.controller.api;
 
+import com.portfolio.dictionary.command.CategoryCommand;
 import com.portfolio.dictionary.dto.CategoryDto;
 import com.portfolio.dictionary.model.AccountDetails;
 import com.portfolio.dictionary.service.CategoryService;
@@ -31,15 +32,15 @@ public class CategoryRestController {
 
     @PostMapping("/categories")
     public CategoryDto create(@AuthenticationPrincipal AccountDetails accountDetails,
-                              @RequestParam String name){
-        return categoryService.create(name, accountDetails.getUserId());
+                              @RequestBody CategoryCommand categoryCommand){
+        return categoryService.create(categoryCommand.getCategoryName(), accountDetails.getUserId());
     }
 
     @PutMapping("/categories/{categoryId}")
     public CategoryDto update(@AuthenticationPrincipal AccountDetails accountDetails,
                               @PathVariable Long categoryId,
-                              @RequestParam String name){
-        return categoryService.update(name,categoryId,accountDetails.getUserId());
+                              @RequestBody CategoryCommand categoryCommand){
+        return categoryService.update(categoryCommand.getCategoryName(),categoryId,accountDetails.getUserId());
     }
 
     @DeleteMapping("/categories/{categoryId}")

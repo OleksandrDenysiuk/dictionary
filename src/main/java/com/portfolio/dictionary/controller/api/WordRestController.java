@@ -1,5 +1,6 @@
 package com.portfolio.dictionary.controller.api;
 
+import com.portfolio.dictionary.command.WordCommand;
 import com.portfolio.dictionary.dto.WordDto;
 import com.portfolio.dictionary.model.AccountDetails;
 import com.portfolio.dictionary.service.WordService;
@@ -32,23 +33,26 @@ public class WordRestController {
 
     @PostMapping("/categories/{categoryId}/words")
     public WordDto create(@AuthenticationPrincipal AccountDetails accountDetails,
-                          WordDto wordDto){
-        return wordService.create(wordDto, accountDetails.getUserId());
+                          @PathVariable Long categoryId,
+                          @RequestBody WordCommand wordCommand){
+        wordCommand.setCategoryId(categoryId);
+        return wordService.create(wordCommand, accountDetails.getUserId());
     }
 
     @PutMapping("/categories/{categoryId}/words/{wordId}")
     public WordDto update(@AuthenticationPrincipal AccountDetails accountDetails,
                           @PathVariable Long wordId,
-                          WordDto wordDto){
-        wordDto.setId(wordId);
-        return wordService.update(wordDto, accountDetails.getUserId());
+                          @PathVariable Long categoryId,
+                          @RequestBody WordCommand wordCommand){
+        wordCommand.setId(wordId);
+        wordCommand.setCategoryId(categoryId);
+        return wordService.update(wordCommand, accountDetails.getUserId());
     }
 
     @DeleteMapping("/categories/{categoryId}/words/{wordId}")
     public void delete(@AuthenticationPrincipal AccountDetails accountDetails,
                        @PathVariable Long wordId,
-                       WordDto wordDto){
-        wordDto.setId(wordId);
-        wordService.delete(wordDto, accountDetails.getUserId());
+                       @PathVariable Long categoryId){
+        wordService.delete(wordId, categoryId, accountDetails.getUserId());
     }
 }
