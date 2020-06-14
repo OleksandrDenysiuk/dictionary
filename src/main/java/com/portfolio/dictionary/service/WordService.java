@@ -1,5 +1,6 @@
 package com.portfolio.dictionary.service;
 
+import com.portfolio.dictionary.command.WordCommand;
 import com.portfolio.dictionary.dto.WordDto;
 
 import java.util.List;
@@ -9,9 +10,9 @@ public interface WordService {
 
     WordDto findOne(Long wordId, Long categoryId, Long userId);
 
-    WordDto create(WordDto dto, Long userId);
+    WordDto create(WordCommand command, Long userId);
 
-    WordDto update(WordDto dto, Long userId);
+    WordDto update(WordCommand command, Long userId);
 
-    void delete(WordDto dto, Long userId);
+    void delete(Long wordId, Long categoryId, Long userId);
 }
