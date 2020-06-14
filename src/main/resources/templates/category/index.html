@@ -14,7 +14,7 @@
         <a class="btn btn-outline-primary my-2 my-sm-0" href="/logout">Logout</a>
     </nav>
     <div class="alert alert-light text-center mb-0" role="alert">
-        <h4 th:text="${category.name}">Category name</h4>
+        <h4 th:data-category-id="${categoryId}">Category name</h4>
     </div>
     <div class=" mb-2 text-center row">
         <div class="col-sm-2 text-left">
@@ -24,12 +24,11 @@
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" data-toggle="modal"
                    data-target="#formChangeCategoryNameModal" class="btn btn-outline-primary">Change name</button>
-                <a th:href="'/category/' + ${category.id} + '/delete'" class="btn btn-outline-primary">Delete category</a>
+                <button class="btn btn-outline-primary">Delete category</button>
             </div>
         </div>
         <div class="col-sm-2 text-right">
             <button type="button" id="addWordButton" class="btn btn-primary"
-                    th:data-action="'/category/'+ ${category.id} + '/word/create'"
                     data-toggle="modal"
                     data-target="#formAddWordModal">Add word</button>
         </div>
@@ -44,20 +43,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="word : ${category.getWords()}">
-            <td th:text="${word.word}">Mark</td>
-            <td th:text="${word.translation}">Mark</td>
-            <td><button type="button" data-target="#formAddWordModal" data-toggle="modal"
-                        th:data-action="'/category/'+ ${category.id} + '/word/' + ${word.id} + '/update'"
-                        th:data-word="${word.word}"
-                        th:data-translation="${word.translation}">Edit</button></td>
-            <td><a th:href="'/category/'+ ${category.id} + '/word/' + ${word.id} + '/delete'">Delete</a></td>
+        <tr>
+            <td>Mark</td>
+            <td>Mark</td>
+            <td><button type="button" class="btn btn-primary" data-target="#formAddWordModal" data-toggle="modal">Edit</button></td>
+            <td><a href="#">Delete</a></td>
         </tr>
         </tbody>
     </table>
-    <div th:if="${category.getWords().size() == 0}" class="alert alert-light text-center mb-0" role="alert">
-        <h5>Category is empty</h5>
-    </div>
+
 </div>
 
 
@@ -73,14 +67,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" th:action="'/category/' + ${category.id} + '/update'">
+            <form method="post" action="#">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" class="form-control" id="name" name="categoryName"
                                placeholder="Enter the name">
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -103,18 +96,18 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" id="formWord" th:action="'/category/'+ ${category.id} + '/word/create'" th:object="${wordForm}">
-                <input type="hidden" th:value="${wordForm.id}">
+            <form method="post">
+                <input type="hidden">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="word">Word:</label>
                         <input type="text" class="form-control" id="word" name="word"
-                               placeholder="Enter the word" th:field="*{word}">
+                               placeholder="Enter the word">
                     </div>
                     <div class="form-group">
                         <label for="translation">Translation:</label>
                         <input type="text" class="form-control" id="translation" name="translation"
-                               placeholder="Enter the translation" th:field="*{translation}">
+                               placeholder="Enter the translation">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -134,19 +127,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script>
-    $('#formAddWordModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var word = button.data('word'); // Extract info from data-* attributes
-        var translation = button.data('translation'); // Extract info from data-* attributes
-        var action = button.data('action'); // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        var modal = $(this);
-        modal.find('#word').val(word);
-        modal.find('#translation').val(translation);
-        $('#formWord').attr('action', action);
-    });
-</script>
+<script th:src="@{/js/category/index.js}"></script>
 </body>
 </html>
