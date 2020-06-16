@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,4 +21,8 @@ public class TestType {
     private Long id;
 
     private String typeName;
+
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "testType")
+    private Set<Category> category = new HashSet<>();
 }

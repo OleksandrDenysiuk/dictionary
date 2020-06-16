@@ -28,4 +28,11 @@ public class Category {
     @OneToMany(cascade = CascadeType.ALL,
                 mappedBy = "category")
     private Set<Word> words = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Result> results = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "fk_test_type")
+    private TestType testType;
 }
