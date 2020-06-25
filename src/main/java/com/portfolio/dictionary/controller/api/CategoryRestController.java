@@ -21,26 +21,27 @@ public class CategoryRestController {
 
     @GetMapping("/categories")
     public List<CategoryDto> getCategories(@AuthenticationPrincipal AccountDetails userDetails){
-        return categoryService.findAll(userDetails.getUserId());
+        return categoryService.getAllByUserId(userDetails.getUserId());
     }
 
     @GetMapping("/categories/{categoryId}")
     public CategoryDto getCategory(@AuthenticationPrincipal AccountDetails accountDetails,
                                          @PathVariable Long categoryId){
-        return categoryService.findByCategoryIdAndUserId(categoryId, accountDetails.getUserId());
+        return categoryService.getOneByIdAndUserId(categoryId, accountDetails.getUserId());
     }
 
     @PostMapping("/categories")
     public CategoryDto create(@AuthenticationPrincipal AccountDetails accountDetails,
                               @RequestBody CategoryCommand categoryCommand){
-        return categoryService.create(categoryCommand.getCategoryName(), accountDetails.getUserId());
+        return categoryService.create(categoryCommand, accountDetails.getUserId());
     }
 
     @PutMapping("/categories/{categoryId}")
     public CategoryDto update(@AuthenticationPrincipal AccountDetails accountDetails,
                               @PathVariable Long categoryId,
                               @RequestBody CategoryCommand categoryCommand){
-        return categoryService.update(categoryCommand.getCategoryName(),categoryId,accountDetails.getUserId());
+        categoryCommand.setId(categoryId);
+        return categoryService.update(categoryCommand,accountDetails.getUserId());
     }
 
     @DeleteMapping("/categories/{categoryId}")

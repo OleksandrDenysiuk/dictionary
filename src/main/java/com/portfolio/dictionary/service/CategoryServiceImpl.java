@@ -1,5 +1,6 @@
 package com.portfolio.dictionary.service;
 
+import com.portfolio.dictionary.command.CategoryCommand;
 import com.portfolio.dictionary.dto.CategoryDto;
 import com.portfolio.dictionary.mapper.CategoryMapper;
 import com.portfolio.dictionary.model.Category;
@@ -8,7 +9,9 @@ import com.portfolio.dictionary.repository.CategoryRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,21 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto create(String name, Long userId) {
-
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Category category = Category.builder().name(name).user(user).build();
-            user.getCategories().add(category);
-            return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
-        } else {
-            throw new RuntimeException("User not found");
-        }
-    }
-
-    @Override
-    public List<CategoryDto> findAll(Long userId) {
+    public List<CategoryDto> getAllByUserId(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -50,16 +39,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto update(String name, Long categoryId, Long userId) {
+    public CategoryDto getOneByIdAndUserId(Long categoryId, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             Optional<Category> optionalCategory = optionalUser.get().getCategories().stream()
                     .filter(category -> category.getId().equals(categoryId))
                     .findFirst();
             if (optionalCategory.isPresent()) {
-                Category category = optionalCategory.get();
-                category.setName(name);
-                return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
+                return CategoryMapper.INSTANCE.toDto(optionalCategory.get());
             } else {
                 throw new RuntimeException("Category not found");
             }
@@ -69,14 +56,30 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto findByCategoryIdAndUserId(Long categoryId, Long userId) {
+    public CategoryDto create(CategoryCommand categoryCommand, Long userId) {
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Category category = Category.builder().name(categoryCommand.getCategoryName()).user(user).build();
+            user.getCategories().add(category);
+            return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @Override
+    public CategoryDto update(CategoryCommand categoryCommand, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             Optional<Category> optionalCategory = optionalUser.get().getCategories().stream()
-                    .filter(category -> category.getId().equals(categoryId))
+                    .filter(category -> category.getId().equals(categoryCommand.getId()))
                     .findFirst();
             if (optionalCategory.isPresent()) {
-                return CategoryMapper.INSTANCE.toDto(optionalCategory.get());
+                Category category = optionalCategory.get();
+                category.setName(categoryCommand.getCategoryName());
+                return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
             } else {
                 throw new RuntimeException("Category not found");
             }
@@ -104,27 +107,5 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             throw new RuntimeException("User not found");
         }
-    }
-
-    @Override
-    public Set<CategoryDto> getListByIdAndUserId(List<String> categoryIdList, Long userId) {
-        Set<CategoryDto> categoryDtoList = new HashSet<>();
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            for (String categoryId : categoryIdList) {
-                Optional<Category> optionalCategory = user.getCategories().stream()
-                        .filter(category -> category.getId().equals(categoryId))
-                        .findFirst();
-                if (optionalCategory.isPresent()) {
-                    categoryDtoList.add(CategoryMapper.INSTANCE.toDto(optionalCategory.get()));
-                } else {
-                    throw new RuntimeException("Category not found");
-                }
-            }
-        } else {
-            throw new RuntimeException("User not found");
-        }
-        return categoryDtoList;
     }
 }
