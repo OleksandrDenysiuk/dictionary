@@ -26,15 +26,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto save(UserDto userDto) {
-        User user = userRepository.findByUsername(userDto.getUsername());
-        if(user == null){
-            user = User.builder()
+    public UserDto create(UserDto userDto) {
+        Optional<User> optionalUser = userRepository.findByUsername(userDto.getUsername());
+        if(optionalUser.isEmpty()){
+            User user = User.builder()
                     .id(userDto.getId())
                     .username(userDto.getUsername())
                     .email(userDto.getEmail())
                     .build();
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
             user.getRoles().add(roleRepository.findByName("USER"));
             user.setActive(true);
             return UserMapper.INSTANCE.toDto(userRepository.save(user));
@@ -45,17 +45,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        } else {
-            return UserMapper.INSTANCE.toDto(user);
-        }
+    public UserDto getOneByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(UserMapper.INSTANCE::toDto)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     @Override
-    public UserDto findById(Long id) {
+    public UserDto getOneById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         if(optionalUser.isPresent()){
             return UserMapper.INSTANCE.toDto(optionalUser.get());
@@ -68,13 +65,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public AccountDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) throw new UsernameNotFoundException(username);
-        return new AccountDetails(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.isActive(),
-                user.getRoles());
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return new AccountDetails(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.isActive(),
+                    user.getRoles());
+        }else {
+            throw new UsernameNotFoundException(username);
+        }
     }
 }

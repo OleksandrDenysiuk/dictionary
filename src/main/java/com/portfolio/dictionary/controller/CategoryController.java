@@ -20,7 +20,7 @@ public class CategoryController {
     @GetMapping("/category/{id}")
     public String getOne(@AuthenticationPrincipal AccountDetails accountDetails,
                          @PathVariable("id")String categoryId, Model model){
-        UserDto user = userService.findByUsername(accountDetails.getUsername());
+        UserDto user = userService.getOneByUsername(accountDetails.getUsername());
         model.addAttribute("user", user);
         model.addAttribute("categoryId", categoryId);
 

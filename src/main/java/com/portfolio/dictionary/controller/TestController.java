@@ -22,7 +22,7 @@ public class TestController {
     @GetMapping("/tests")
     public String getForm(@AuthenticationPrincipal AccountDetails details,
                           Model model) {
-        model.addAttribute("user", userService.findById(details.getUserId()));
+        model.addAttribute("user", userService.getOneById(details.getUserId()));
         model.addAttribute("types", testTypeService.getAll());
         return "test/testForm";
     }
@@ -30,7 +30,7 @@ public class TestController {
     @GetMapping("/tests/start")
     public String process(@AuthenticationPrincipal AccountDetails details,
                           Model model) {
-        model.addAttribute("user", userService.findById(details.getUserId()));
+        model.addAttribute("user", userService.getOneById(details.getUserId()));
         return "test/index";
     }
 
@@ -38,7 +38,7 @@ public class TestController {
     public String result(@AuthenticationPrincipal AccountDetails details,
                          @PathVariable Long resultId,
                          Model model) {
-        model.addAttribute("user", userService.findById(details.getUserId()));
+        model.addAttribute("user", userService.getOneById(details.getUserId()));
         model.addAttribute("resultId", resultId);
         return "test/result";
     }

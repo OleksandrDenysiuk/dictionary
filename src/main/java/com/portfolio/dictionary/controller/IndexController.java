@@ -21,7 +21,7 @@ public class IndexController {
     @GetMapping("/")
     public String welcome(@AuthenticationPrincipal AccountDetails details,
                           Model model) {
-        UserDto user = userService.findByUsername(details.getUsername());
+        UserDto user = userService.getOneByUsername(details.getUsername());
 
         model.addAttribute("user", user);
         return "index";

@@ -28,7 +28,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "authentication/registrationForm";
         }
-        userService.save(user);
+        userService.create(user);
         return "redirect:/";
     }
 
@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping("/api/user/{id}")
     public @ResponseBody UserDto getUserDto(@PathVariable("id") String userId) {
-        UserDto user = userService.findById(Long.valueOf(userId));
+        UserDto user = userService.getOneById(Long.valueOf(userId));
         return user;
     }
 }
