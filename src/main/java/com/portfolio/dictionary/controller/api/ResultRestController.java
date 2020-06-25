@@ -28,4 +28,11 @@ public class ResultRestController {
             @RequestBody ResultCommand resultCommand){
         return resultService.create(resultCommand, details.getUserId());
     }
+
+    @DeleteMapping("/results/{resultId}")
+    @ResponseBody
+    public void delete(@AuthenticationPrincipal AccountDetails details,
+                       @PathVariable Long resultId){
+        resultService.delete(resultId, details.getUserId());
+    }
 }
