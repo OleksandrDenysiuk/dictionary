@@ -5,7 +5,9 @@ import com.portfolio.dictionary.dto.ResultDto;
 
 public interface ResultService {
 
+    ResultDto getOne(Long resultId, Long userId);
+
     ResultDto create(ResultCommand resultCommand, Long userId);
 
-    ResultDto getOne(Long resultId, Long userId);
+    void delete(Long resultId, Long userId);
 }

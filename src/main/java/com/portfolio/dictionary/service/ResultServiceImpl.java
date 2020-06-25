@@ -82,7 +82,6 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public ResultDto getOne(Long resultId, Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
-
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             Optional<Result> optionalResult = user.getResults().stream()
@@ -90,6 +89,24 @@ public class ResultServiceImpl implements ResultService {
                     .findFirst();
             if (optionalResult.isPresent()) {
                 return ResultMapper.INSTANCE.toDto(optionalResult.get());
+            } else {
+                throw new RuntimeException("Result not found");
+            }
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @Override
+    public void delete(Long resultId, Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Optional<Result> optionalResult = user.getResults().stream()
+                    .filter(result -> result.getId().equals(resultId))
+                    .findFirst();
+            if (optionalResult.isPresent()) {
+                resultRepository.delete(optionalResult.get());
             } else {
                 throw new RuntimeException("Result not found");
             }
