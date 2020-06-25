@@ -17,7 +17,7 @@ public class AccountDetails implements UserDetails {
     private String username;
     private String password;
     private boolean active;
-    private Set<GrantedAuthority> authorities;
+    private Set<Role> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

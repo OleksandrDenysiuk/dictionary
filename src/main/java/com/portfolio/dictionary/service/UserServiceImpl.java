@@ -2,12 +2,14 @@ package com.portfolio.dictionary.service;
 
 import com.portfolio.dictionary.dto.UserDto;
 import com.portfolio.dictionary.mapper.UserMapper;
+import com.portfolio.dictionary.model.AccountDetails;
 import com.portfolio.dictionary.model.User;
 import com.portfolio.dictionary.repository.RoleRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -61,5 +63,18 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User not found");
         }
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AccountDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) throw new UsernameNotFoundException(username);
+        return new AccountDetails(
+                user.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                user.isActive(),
+                user.getRoles());
     }
 }
