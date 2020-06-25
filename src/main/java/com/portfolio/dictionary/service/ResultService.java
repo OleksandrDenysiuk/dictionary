@@ -5,7 +5,7 @@ import com.portfolio.dictionary.dto.ResultDto;
 
 public interface ResultService {
 
-    ResultDto getOne(Long resultId, Long userId);
+    ResultDto getOneByIdAndUserId(Long resultId, Long userId);
 
     ResultDto create(ResultCommand resultCommand, Long userId);
 

@@ -9,6 +9,7 @@ import com.portfolio.dictionary.repository.TestTypeRepository;
 import com.portfolio.dictionary.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,59 +29,60 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public ResultDto create(ResultCommand resultCommand, Long userId) {
 
-        Result result = new Result();
-
-        result.setStartTime(resultCommand.getStartTime());
-        result.setFinishTime(resultCommand.getFinishTime());
-
-        TestType testType = testTypeRepository.findByTypeName(resultCommand.getTestType());
-        if (testType != null) {
-            result.setTestType(testType);
-        }
-
-        int points = resultCommand.getWords().size();
-
         Optional<User> userOptional = userRepository.findById(userId);
-
         if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            result.setUser(user);
+            Optional<TestType> optionalTestType = testTypeRepository.findByTypeName(resultCommand.getTestType());
+            if (optionalTestType.isPresent()) {
+                Result result = new Result();
+                User user = userOptional.get();
 
-            for (String id : resultCommand.getCategoriesId()) {
-                Optional<Category> optionalCategory = user.getCategories().stream()
-                        .filter(category -> category.getId().equals(Long.valueOf(id)))
-                        .findFirst();
+                result.setStartTime(resultCommand.getStartTime());
+                result.setFinishTime(resultCommand.getFinishTime());
+                result.setTestType(optionalTestType.get());
+                result.setUser(user);
 
-                if (optionalCategory.isPresent()) {
-                    Category category = optionalCategory.get();
-                    result.getCategories().add(category);
+                int points = resultCommand.getWords().size();
 
-                    for (int i = 0; i < resultCommand.getWords().size(); i++) {
-                        final int k = i;
-                        Optional<Word> optionalWord = category.getWords().stream()
-                                .filter(word -> word.getWord().equals(resultCommand.getWords().get(k)))
-                                .findFirst();
+                for (String id : resultCommand.getCategoriesId()) {
+                    Optional<Category> optionalCategory = user.getCategories().stream()
+                            .filter(category -> category.getId().equals(Long.valueOf(id)))
+                            .findFirst();
 
-                        if (optionalWord.isPresent()) {
-                            Word word = optionalWord.get();
+                    if (optionalCategory.isPresent()) {
+                        Category category = optionalCategory.get();
+                        result.getCategories().add(category);
 
-                            if (!word.getTranslation().equals(resultCommand.getAnswers().get(i))) {
-                                points--;
-                            }
-                        }
+                        points = getPoints(category, resultCommand.getWords(), resultCommand.getAnswers(), points);
                     }
                 }
-            }
+                result.setPoints(points);
 
-            result.setPoints(points);
-            return ResultMapper.INSTANCE.toDto(resultRepository.save(result));
+                return ResultMapper.INSTANCE.toDto(resultRepository.save(result));
+            } else {
+                throw new RuntimeException("Test type not found");
+            }
         } else {
             throw new RuntimeException("User not found");
         }
     }
 
+    private int getPoints(Category category, List<String> words,  List<String> answers, int points) {
+        for (int i = 0; i < words.size(); i++) {
+            final int k = i;
+            Optional<Word> optionalWord = category.getWords().stream()
+                    .filter(word -> word.getWord().equals(words.get(k)))
+                    .findFirst();
+            if (optionalWord.isPresent()) {
+                if (!optionalWord.get().getTranslation().equals(answers.get(i))) {
+                    points--;
+                }
+            }
+        }
+        return points;
+    }
+
     @Override
-    public ResultDto getOne(Long resultId, Long userId) {
+    public ResultDto getOneByIdAndUserId(Long resultId, Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -106,6 +108,9 @@ public class ResultServiceImpl implements ResultService {
                     .filter(result -> result.getId().equals(resultId))
                     .findFirst();
             if (optionalResult.isPresent()) {
+                Result result = optionalResult.get();
+                user.getResults().remove(result);
+                result.setUser(null);
                 resultRepository.delete(optionalResult.get());
             } else {
                 throw new RuntimeException("Result not found");
