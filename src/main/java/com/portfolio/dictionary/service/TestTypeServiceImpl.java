@@ -1,6 +1,5 @@
 package com.portfolio.dictionary.service;
 
-import com.portfolio.dictionary.model.TestType;
 import com.portfolio.dictionary.repository.TestTypeRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +18,8 @@ public class TestTypeServiceImpl implements TestTypeService {
     @Override
     public List<String> getAll() {
         List<String> types = new ArrayList<>();
-        for(TestType type : testTypeRepository.findAll()){
-            types.add(type.getTypeName());
-        }
+        testTypeRepository.findAll().forEach(testType -> types.add(testType.getTypeName()));
         return types;
     }
+
 }

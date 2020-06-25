@@ -20,7 +20,7 @@ public class ResultRestController {
     @GetMapping("/results/{resultId}")
     public ResultDto getOne(@AuthenticationPrincipal AccountDetails details,
                             @PathVariable Long resultId){
-        return resultService.getOne(resultId,details.getUserId());
+        return resultService.getOneByIdAndUserId(resultId,details.getUserId());
     }
 
     @PostMapping("/results")

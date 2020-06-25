@@ -17,12 +17,8 @@ public class TestTypeInit implements ApplicationListener<ContextRefreshedEvent> 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        TestType type1 = new TestType();
-        type1.setTypeName("CHOOSE_CORRECT");
-        testTypeRepository.save(type1);
-
-        TestType type2 = new TestType();
-        type2.setTypeName("WRITE_ANSWER");
-        testTypeRepository.save(type2);
+        TestType type = new TestType();
+        type.setTypeName("WRITE_ANSWER");
+        testTypeRepository.save(type);
     }
 }
