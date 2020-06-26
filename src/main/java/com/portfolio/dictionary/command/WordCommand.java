@@ -15,6 +15,4 @@ public class WordCommand {
     private String word;
 
     private String translation;
-
-    private Long categoryId;
 }

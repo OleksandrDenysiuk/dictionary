@@ -6,13 +6,13 @@ import com.portfolio.dictionary.dto.WordDto;
 import java.util.List;
 
 public interface WordService {
-    List<WordDto> findAll(Long categoryId, Long userId);
+    List<WordDto> getAllByCategoryIdAndUserId(Long categoryId, Long userId);
 
-    WordDto findOne(Long wordId, Long categoryId, Long userId);
+    WordDto getOneByIdAndCategoryIdAndUserId(Long wordId, Long categoryId, Long userId);
 
-    WordDto create(WordCommand command, Long userId);
+    WordDto create(WordCommand command, Long categoryId, Long userId);
 
-    WordDto update(WordCommand command, Long userId);
+    WordDto update(WordCommand command, Long categoryId, Long userId);
 
     void delete(Long wordId, Long categoryId, Long userId);
 }

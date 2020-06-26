@@ -21,22 +21,21 @@ public class WordRestController {
     @GetMapping("/categories/{categoryId}/words")
     public List<WordDto> getWords(@AuthenticationPrincipal AccountDetails accountDetails,
                                  @PathVariable Long categoryId){
-        return wordService.findAll(categoryId, accountDetails.getUserId());
+        return wordService.getAllByCategoryIdAndUserId(categoryId, accountDetails.getUserId());
     }
 
     @GetMapping("/categories/{categoryId}/words/{wordId}")
     public WordDto getWords(@AuthenticationPrincipal AccountDetails accountDetails,
                                  @PathVariable Long categoryId,
                                   @PathVariable Long wordId){
-        return wordService.findOne(wordId, categoryId, accountDetails.getUserId());
+        return wordService.getOneByIdAndCategoryIdAndUserId(wordId, categoryId, accountDetails.getUserId());
     }
 
     @PostMapping("/categories/{categoryId}/words")
     public WordDto create(@AuthenticationPrincipal AccountDetails accountDetails,
                           @PathVariable Long categoryId,
                           @RequestBody WordCommand wordCommand){
-        wordCommand.setCategoryId(categoryId);
-        return wordService.create(wordCommand, accountDetails.getUserId());
+        return wordService.create(wordCommand, categoryId, accountDetails.getUserId());
     }
 
     @PutMapping("/categories/{categoryId}/words/{wordId}")
@@ -45,8 +44,7 @@ public class WordRestController {
                           @PathVariable Long categoryId,
                           @RequestBody WordCommand wordCommand){
         wordCommand.setId(wordId);
-        wordCommand.setCategoryId(categoryId);
-        return wordService.update(wordCommand, accountDetails.getUserId());
+        return wordService.update(wordCommand, categoryId, accountDetails.getUserId());
     }
 
     @DeleteMapping("/categories/{categoryId}/words/{wordId}")

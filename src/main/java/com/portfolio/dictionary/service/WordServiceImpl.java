@@ -26,13 +26,13 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public WordDto create(WordCommand command, Long userId) {
+    public WordDto create(WordCommand command,Long categoryId, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             Optional<Category> optionalCategory = user.getCategories()
                     .stream()
-                    .filter(category -> command.getCategoryId().equals(category.getId()))
+                    .filter(category -> category.getId().equals(categoryId))
                     .findFirst();
 
             if (optionalCategory.isPresent()) {
@@ -54,7 +54,7 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public List<WordDto> findAll(Long categoryId, Long userId) {
+    public List<WordDto> getAllByCategoryIdAndUserId(Long categoryId, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
@@ -76,7 +76,7 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public WordDto findOne(Long wordId, Long categoryId, Long userId) {
+    public WordDto getOneByIdAndCategoryIdAndUserId(Long wordId, Long categoryId, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
@@ -102,13 +102,13 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public WordDto update(WordCommand command, Long userId) {
+    public WordDto update(WordCommand command,Long categoryId, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             Optional<Category> optionalCategory = user.getCategories()
                     .stream()
-                    .filter(category -> category.getId().equals(command.getCategoryId()))
+                    .filter(category -> category.getId().equals(categoryId))
                     .findFirst();
             if (optionalCategory.isPresent()) {
                 Category category = optionalCategory.get();
