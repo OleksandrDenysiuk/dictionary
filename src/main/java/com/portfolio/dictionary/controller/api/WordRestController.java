@@ -19,13 +19,13 @@ public class WordRestController {
     }
 
     @GetMapping("/categories/{categoryId}/words")
-    public List<WordDto> getWords(@AuthenticationPrincipal AccountDetails accountDetails,
+    public List<WordDto> getAll(@AuthenticationPrincipal AccountDetails accountDetails,
                                  @PathVariable Long categoryId){
         return wordService.getAllByCategoryIdAndUserId(categoryId, accountDetails.getUserId());
     }
 
     @GetMapping("/categories/{categoryId}/words/{wordId}")
-    public WordDto getWords(@AuthenticationPrincipal AccountDetails accountDetails,
+    public WordDto getOne(@AuthenticationPrincipal AccountDetails accountDetails,
                                  @PathVariable Long categoryId,
                                   @PathVariable Long wordId){
         return wordService.getOneByIdAndCategoryIdAndUserId(wordId, categoryId, accountDetails.getUserId());
