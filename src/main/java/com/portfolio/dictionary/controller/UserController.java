@@ -5,7 +5,9 @@ import com.portfolio.dictionary.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 
@@ -42,11 +44,5 @@ public class UserController {
             model.addAttribute("message", "You have been logged out successfully.");
 
         return "authentication/loginForm";
-    }
-
-    @GetMapping("/api/user/{id}")
-    public @ResponseBody UserDto getUserDto(@PathVariable("id") String userId) {
-        UserDto user = userService.getOneById(Long.valueOf(userId));
-        return user;
     }
 }
