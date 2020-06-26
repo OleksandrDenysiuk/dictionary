@@ -26,11 +26,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class IndexControllerTest {
+class CategoryControllerTest {
     @Mock
     UserService userService;
     @InjectMocks
-    IndexController indexController;
+    CategoryController categoryController;
 
     MockMvc mockMvc;
 
@@ -50,16 +50,17 @@ class IndexControllerTest {
                 return new AccountDetails(1L, "u", "1", true, Collections.singleton(Role.builder().id(1L).name("USER").build()));
             }
         };
-        mockMvc = MockMvcBuilders.standaloneSetup(indexController).setCustomArgumentResolvers(putPrincipal).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).setCustomArgumentResolvers(putPrincipal).build();
     }
 
     @Test
-    void welcome() throws Exception {
+    void getOne() throws Exception {
         when(userService.getOneByUsername(anyString())).thenReturn(UserDto.builder().id(1L).build());
 
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/category/1"))
                 .andExpect(model().attributeExists("user"))
-                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("categoryId"))
+                .andExpect(view().name("category/index"))
                 .andExpect(status().isOk());
 
         verify(userService,times(1)).getOneByUsername(anyString());
